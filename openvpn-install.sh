@@ -597,7 +597,7 @@ function installQuestions() {
 		echo "tls-auth authenticates the packets, while tls-crypt authenticate and encrypt them."
 		echo "   1) tls-crypt (recommended)"
 		echo "   2) tls-auth"
-        echo "   3) tls-crypt-v2 (super recommended)"
+        echo "   3) tls-crypt-v2 (and this recommended)"
 		until [[ $TLS_SIG =~ [1-3] ]]; do
 			read -rp "Control channel additional security mechanism [1-3]: " -e -i 1 TLS_SIG
 		done
