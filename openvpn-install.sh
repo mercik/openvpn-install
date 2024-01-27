@@ -751,6 +751,11 @@ function installOpenVPN() {
 			# Generate tls-auth key
 			openvpn --genkey --secret /etc/openvpn/tls-auth.key
 			;;
+        3)
+			# Generate tls-crypt-v2 key
+			openvpn --genkey tls-crypt-v2-server /etc/openvpn/tls-crypt-v2.key
+			mkdir -p /etc/openvpn/keys-v2
+			;;
 		esac
 	else
 		# If easy-rsa is already installed, grab the generated SERVER_NAME
@@ -885,6 +890,9 @@ push "redirect-gateway ipv6"' >>/etc/openvpn/server.conf
 		;;
 	2)
 		echo "tls-auth tls-auth.key 0" >>/etc/openvpn/server.conf
+		;;
+    3)
+		echo "tls-crypt-v2 tls-crypt-v2.key" >>/etc/openvpn/server.conf
 		;;
 	esac
 
@@ -1118,6 +1126,8 @@ function newClient() {
 		TLS_SIG="1"
 	elif grep -qs "^tls-auth" /etc/openvpn/server.conf; then
 		TLS_SIG="2"
+    else grep -qs "^tls-crypt-v2" /etc/openvpn/server.conf;
+		TLS_SIG="3"
 	fi
 
 	# Generates the custom client.ovpn
@@ -1146,6 +1156,12 @@ function newClient() {
 			echo "<tls-auth>"
 			cat /etc/openvpn/tls-auth.key
 			echo "</tls-auth>"
+			;;
+        3)
+			openvpn --tls-crypt-v2 /etc/openvpn/tls-crypt-v2.key --genkey tls-crypt-v2-client /etc/openvpn/keys-v2/$CLIENT.key
+            echo "<tls-crypt-v2>"
+			cat /etc/openvpn/keys-v2/$CLIENT.key
+			echo "</tls-crypt-v2>"
 			;;
 		esac
 	} >>"$homeDir/$CLIENT.ovpn"
