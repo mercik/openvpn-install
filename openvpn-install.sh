@@ -218,6 +218,7 @@ access-control: fd42:42:42:42::/112 allow' >>/etc/unbound/openvpn.conf
 
 function installQuestions() {
 	echo "Welcome to the OpenVPN installer!"
+    echo "The git repository is available at: https://github.com/mercik/openvpn-install"
 	echo "The git repository is available at: https://github.com/angristan/openvpn-install"
 	echo ""
 
